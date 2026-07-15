@@ -961,7 +961,7 @@
                     { id: 11, ar: { name: "جينز ويد ليج ازرق فاتح", price: 650 }, en: { name: "Wide Leg lightblue Jeans", price: 650 }, category: "pants", images: ["jeans-lightblue-front.jpeg","jeans-lightblue-side.jpeg"], sizes: ["32","34","36"], badge: "new" },
                     { id: 12, ar: { name: "جينز ويد ليج حديدي", price: 650 }, en: { name: "Wide Leg Light Wash Jeans", price: 650 }, category: "pants", images: ["Wide Leg Light Wash Jeans-front.jpeg","Wide Leg Light Wash Jeans-side.jpeg"], sizes: ["32","34","36"], badge: "new" },
                 ];
-                this.featuredIds = [];
+                this.featuredIds = [1, 2, 12, 7, 8, 3, 5];
                 this.loaded = true;
             }
 
@@ -1026,9 +1026,7 @@
         // ═══════════════════════════════════════════════════════════
         // ║  App State                                              ║
         // ═══════════════════════════════════════════════════════════
-        let currentLang = 'ar', 
-            cart = JSON.parse(localStorage.getItem('SS_cart') || '[]'), 
-            selectedSizes = {};        
+        let currentLang = 'ar', cart = [], selectedSizes = {};
         let favorites = JSON.parse(localStorage.getItem('southside_favorites') || '[]');
         let currentDetailProduct = null;
         let userLocation = null;
@@ -1125,7 +1123,6 @@
                 '<div class="product-info"><p class="product-category">SOUTH SIDE</p><h3>' + productManager.getName(p, currentLang) + '</h3>' +
                 '<p class="product-price">' + productManager.getPrice(p, currentLang) + ' EGP ' + lowStock + '</p>' + sizesHtml + addBtn + '</div></div>';
         }
-        
 
         function cardSlide(productId, index) {
             const card = document.getElementById('pcard-' + productId);
@@ -1144,10 +1141,6 @@
             grid.innerHTML = '';
             const filtered = productManager.getByCategory(filterType);
             filtered.forEach(p => { grid.innerHTML += renderProductCard(p, true); });
-            filtered.forEach(p => {
-                const card = document.getElementById('pcard-' + p.id);
-                if (card) initCardSwipe(card, p.id);
-            });
         }
 
         function renderFeatured() {
@@ -1155,11 +1148,6 @@
             if (!grid) return;
             grid.innerHTML = '';
             productManager.getFeatured().forEach(p => { grid.innerHTML += renderProductCard(p, false); });
-
-            productManager.getFeatured().forEach(p => {
-                const card = document.getElementById('pcard-' + p.id);
-                if (card) initCardSwipe(card, p.id);
-            });
         }
 
         function selectSize(productId, size) {
@@ -1183,10 +1171,6 @@
         }
 
         function updateCart() {
-
-                    
-            localStorage.setItem('SS_cart', JSON.stringify(cart));
-
             const count = cart.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById('cartCount').textContent = count;
             const itemsDiv = document.getElementById('cartItems');
@@ -1273,7 +1257,6 @@
             document.getElementById('detailGrid').innerHTML = renderProductDetailHtml(p);
             document.getElementById('productModal').classList.add('open');
             document.body.style.overflow = 'hidden';
-            setTimeout(initDetailSwipe, 50);
         }
 
         function closeProductDetail() {
@@ -1546,10 +1529,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
-
-        window.addEventListener('load', function() {
-            updateCart();
-        });
     </script>
 </body>
 </html>
