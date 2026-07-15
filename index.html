@@ -1026,7 +1026,9 @@
         // ═══════════════════════════════════════════════════════════
         // ║  App State                                              ║
         // ═══════════════════════════════════════════════════════════
-        let currentLang = 'ar', cart = [], selectedSizes = {};
+        let currentLang = 'ar', 
+            cart = JSON.parse(localStorage.getItem('SS_cart') || '[]'), 
+            selectedSizes = {};
         let favorites = JSON.parse(localStorage.getItem('southside_favorites') || '[]');
         let currentDetailProduct = null;
         let userLocation = null;
@@ -1171,6 +1173,7 @@
         }
 
         function updateCart() {
+            localStorage.setItem('SS_cart', JSON.stringify(cart));
             const count = cart.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById('cartCount').textContent = count;
             const itemsDiv = document.getElementById('cartItems');
@@ -1388,7 +1391,6 @@
             closeCheckout();
             cart = [];
             selectedSizes = {};
-            updateCart();
             showSuccess();
         }
 
@@ -1529,6 +1531,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
+        window.addEventListener('load', function() {
+            updateCart();
+        });
     </script>
 </body>
 </html>
